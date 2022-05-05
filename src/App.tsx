@@ -11,7 +11,7 @@ function App() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 10,
+            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

@@ -14,6 +14,8 @@ import { IErrorInterface, IRes } from "../../types/interfaces/res.interface";
 import { IAnalyzeRes } from "../../types/interfaces/analyze-res.interface";
 import Snack from "../snack/snack.component";
 import { fetchDynamicAPI } from "../../utils/fetch.util";
+import Loader from "../loader/loader.component";
+import { symbolURL } from "../../types/constants/constants";
 
 const Login = () => {
   const [symbol, setSymbol] = React.useState<string | null>(null);
@@ -21,9 +23,11 @@ const Login = () => {
     null
   );
   const [openSnack, setOpenSnack] = React.useState<boolean>(false);
+  const [fetchingData, setFetchingData] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
   React.useEffect(() => {
+    // set guard
     sessionStorage.setItem("isSymbol", "false");
   }, []);
 
@@ -40,20 +44,27 @@ const Login = () => {
   const handleSubmit = () => {
     if (!symbol) return;
 
-    fetchDynamicAPI(`http://localhost:1880/get-symbol-data/${symbol}`).then(
-      (result: IErrorInterface | IRes) => {
-        const { isError, msg } = analyzeRes(result);
-        if (!isError) {
-          sessionStorage.setItem("isSymbol", "true");
-          navigate("/home", { replace: true });
-        } else {
-          seterrorAnalizer({ isError, msg });
+    setFetchingData(true);
+    setOpenSnack(false);
+
+    fetchDynamicAPI(`${symbolURL}/${symbol}`)
+      .then(
+        (result: IErrorInterface | IRes) => {
+          const { isError, msg } = analyzeRes(result);
+          if (!isError) {
+            sessionStorage.setItem("isSymbol", "true");
+            navigate("/home", { replace: true });
+          } else {
+            seterrorAnalizer({ isError, msg });
+          }
+        },
+        (error) => {
+          console.log("err", error);
         }
-      },
-      (error) => {
-        console.log("err", error);
-      }
-    );
+      )
+      .finally(() => {
+        setFetchingData(false);
+      });
   };
 
   return (
@@ -74,7 +85,7 @@ const Login = () => {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <Box sx={{ mt: 1 }}>
+          <Box sx={{ mt: 1, maxWidth: 260, width: "100%" }}>
             <TextField
               margin="normal"
               required
@@ -86,15 +97,19 @@ const Login = () => {
               autoFocus
               onChange={handleChange}
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={handleSubmit}
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Login
-            </Button>
+            {fetchingData ? (
+              <Loader />
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                onClick={handleSubmit}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Login
+              </Button>
+            )}
           </Box>
         </Box>
       </Container>

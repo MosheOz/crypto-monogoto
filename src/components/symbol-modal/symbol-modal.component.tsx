@@ -11,6 +11,8 @@ import { IRes } from "../../types/interfaces/res.interface";
 import { fetchDynamicAPI } from "../../utils/fetch.util";
 import SymbolData from "../symbol-data/symbol-data";
 import { Box, Container, CssBaseline } from "@mui/material";
+import Loader from "../loader/loader.component";
+import { symbolURL } from "../../types/constants/constants";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,16 +31,22 @@ type symbolModalType = {
 
 const SymbolModal: React.FC<symbolModalType> = ({ open, setOpen, symbol }) => {
   const [symbolData, setSymbolData] = React.useState<IRes | null>(null);
+  const [fetchingData, setFetchingData] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    fetchDynamicAPI(`http://localhost:1880/get-symbol-data/${symbol}`).then(
-      (result: IRes) => {
-        setSymbolData(result);
-      },
-      (error) => {
-        console.log("err", error);
-      }
-    );
+    setFetchingData(true);
+    fetchDynamicAPI(`${symbolURL}/${symbol}`)
+      .then(
+        (result: IRes) => {
+          setSymbolData(result);
+        },
+        (error) => {
+          console.log("err", error);
+        }
+      )
+      .finally(() => {
+        setFetchingData(false);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -70,16 +78,22 @@ const SymbolModal: React.FC<symbolModalType> = ({ open, setOpen, symbol }) => {
       </AppBar>
       <Container component="div" maxWidth="xs">
         <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 10,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {symbolData && <SymbolData data={symbolData} />}
-        </Box>
+        {fetchingData ? (
+          <Box sx={{ marginTop: 15 }}>
+            <Loader />
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              marginTop: 5,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            {symbolData && <SymbolData data={symbolData} />}
+          </Box>
+        )}
       </Container>
     </Dialog>
   );

@@ -4,18 +4,18 @@ import { GridCellDef } from "../../types/interfaces/symbol-table.interface";
 
 export function getColsDef(): GridColDef[] {
   return [
-    { field: "id", headerName: "ID" },
-    { field: "symbol", headerName: "Symbol", width: 200 },
+    { field: "id", headerName: "ID", flex: 1 },
+    { field: "symbol", headerName: "Symbol", flex: 1 },
     {
       field: "lastPrice",
       headerName: "Last Price",
-      width: 200,
+      flex: 1,
       type: "number",
     },
     {
       field: "openPrice",
       headerName: "Open Price",
-      width: 200,
+      flex: 1,
       type: "number",
     },
   ];

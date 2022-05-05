@@ -1,12 +1,18 @@
-import { GridCellParams, GridColDef } from "@mui/x-data-grid";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { GridCellParams, GridColDef } from "@mui/x-data-grid";
+import { Avatar } from "@mui/material";
+import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
+
 import { IRes } from "../../types/interfaces/res.interface";
 import { GridCellDef } from "../../types/interfaces/symbol-table.interface";
 import { fetchDynamicAPI } from "../../utils/fetch.util";
 import SymbolModal from "../symbol-modal/symbol-modal.component";
 import SymbolsTable from "../symbols-table/symbols-table.component";
 import { getCellsDef, getColsDef } from "./home.helper";
-import { useNavigate } from "react-router-dom";
+import Loader from "../loader/loader.component";
+import { Box } from "@mui/system";
+import { symbolsListURL } from "../../types/constants/constants";
 
 const Home = () => {
   const [symbolsList, setSymbolsList] = React.useState<IRes[] | []>([]);
@@ -14,6 +20,7 @@ const Home = () => {
   const [symbolSelected, setSymbolSelected] = React.useState<string | null>(
     null
   );
+  const [fetchingData, setFetchingData] = React.useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -25,14 +32,21 @@ const Home = () => {
       return;
     }
 
-    fetchDynamicAPI(`https://api2.binance.com/api/v3/ticker/24hr`).then(
-      (result: IRes[]) => {
-        setSymbolsList(result);
-      },
-      (error) => {
-        console.log("err", error);
-      }
-    );
+    setFetchingData(true);
+
+    fetchDynamicAPI(symbolsListURL)
+      .then(
+        (result: IRes[]) => {
+          setSymbolsList(result);
+        },
+        (error) => {
+          console.log("err", error);
+        }
+      )
+      .finally(() => {
+        setFetchingData(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -50,7 +64,20 @@ const Home = () => {
 
   return (
     <>
-      <SymbolsTable rows={rows} columns={columns} onCellClick={onCellClick} />
+      <Avatar sx={{ marginBottom: 3, bgcolor: "secondary.main" }}>
+        <CurrencyBitcoinIcon />
+      </Avatar>
+      {fetchingData ? (
+        <Box
+          sx={{
+            marginTop: 15,
+          }}
+        >
+          <Loader />
+        </Box>
+      ) : (
+        <SymbolsTable rows={rows} columns={columns} onCellClick={onCellClick} />
+      )}
       {openModal && symbolSelected && (
         <SymbolModal
           open={openModal}
