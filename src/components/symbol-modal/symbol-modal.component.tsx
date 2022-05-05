@@ -1,10 +1,5 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItem from "@mui/material/ListItem";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -15,6 +10,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { IRes } from "../../types/interfaces/res.interface";
 import { fetchDynamicAPI } from "../../utils/fetch.util";
 import SymbolData from "../symbol-data/symbol-data";
+import { Box, Container, CssBaseline } from "@mui/material";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,16 +31,15 @@ const SymbolModal: React.FC<symbolModalType> = ({ open, setOpen, symbol }) => {
   const [symbolData, setSymbolData] = React.useState<IRes | null>(null);
 
   React.useEffect(() => {
-    try {
-      fetchDynamicAPI(`http://localhost:1880/get-symbol-data/${symbol}`).then(
-        (result: IRes) => {
-          setSymbolData(result);
-        },
-        (error) => {
-          console.log("err", error);
-        }
-      );
-    } catch (err) {}
+    fetchDynamicAPI(`http://localhost:1880/get-symbol-data/${symbol}`).then(
+      (result: IRes) => {
+        setSymbolData(result);
+      },
+      (error) => {
+        console.log("err", error);
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClose = () => {
@@ -73,7 +68,19 @@ const SymbolModal: React.FC<symbolModalType> = ({ open, setOpen, symbol }) => {
           </Typography>
         </Toolbar>
       </AppBar>
-      {symbolData && <SymbolData data={symbolData} />}
+      <Container component="div" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {symbolData && <SymbolData data={symbolData} />}
+        </Box>
+      </Container>
     </Dialog>
   );
 };

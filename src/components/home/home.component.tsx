@@ -6,6 +6,7 @@ import { fetchDynamicAPI } from "../../utils/fetch.util";
 import SymbolModal from "../symbol-modal/symbol-modal.component";
 import SymbolsTable from "../symbols-table/symbols-table.component";
 import { getCellsDef, getColsDef } from "./home.helper";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [symbolsList, setSymbolsList] = React.useState<IRes[] | []>([]);
@@ -14,7 +15,16 @@ const Home = () => {
     null
   );
 
+  const navigate = useNavigate();
+
   React.useEffect(() => {
+    // add guard
+    const isSymbol = JSON.parse(sessionStorage.getItem("isSymbol") as string);
+    if (!isSymbol) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
     fetchDynamicAPI(`https://api2.binance.com/api/v3/ticker/24hr`).then(
       (result: IRes[]) => {
         setSymbolsList(result);

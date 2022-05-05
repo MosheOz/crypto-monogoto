@@ -24,6 +24,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
+    sessionStorage.setItem("isSymbol", "false");
+  }, []);
+
+  React.useEffect(() => {
     if (errorAnalizer) {
       setOpenSnack(errorAnalizer?.isError);
     }
@@ -40,6 +44,7 @@ const Login = () => {
       (result: IErrorInterface | IRes) => {
         const { isError, msg } = analyzeRes(result);
         if (!isError) {
+          sessionStorage.setItem("isSymbol", "true");
           navigate("/home", { replace: true });
         } else {
           seterrorAnalizer({ isError, msg });
