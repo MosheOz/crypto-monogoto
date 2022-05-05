@@ -13,6 +13,7 @@ import { analyzeRes } from "./login.helper";
 import { IErrorInterface, IRes } from "../../types/interfaces/res.interface";
 import { IAnalyzeRes } from "../../types/interfaces/analyze-res.interface";
 import Snack from "../snack/snack.component";
+import { fetchDynamicAPI } from "../../utils/fetch.util";
 
 const Login = () => {
   const [symbol, setSymbol] = React.useState<string | null>(null);
@@ -35,21 +36,19 @@ const Login = () => {
   const handleSubmit = () => {
     if (!symbol) return;
 
-    fetch(`http://localhost:1880/get-symbol-data/${symbol}`)
-      .then((res) => res.json())
-      .then(
-        (result: IErrorInterface | IRes) => {
-          const { isError, msg } = analyzeRes(result);
-          if (!isError) {
-            navigate("/home", { replace: true });
-          } else {
-            seterrorAnalizer({ isError, msg });
-          }
-        },
-        (error) => {
-          console.log("err", error);
+    fetchDynamicAPI(`http://localhost:1880/get-symbol-data/${symbol}`).then(
+      (result: IErrorInterface | IRes) => {
+        const { isError, msg } = analyzeRes(result);
+        if (!isError) {
+          navigate("/home", { replace: true });
+        } else {
+          seterrorAnalizer({ isError, msg });
         }
-      );
+      },
+      (error) => {
+        console.log("err", error);
+      }
+    );
   };
 
   return (
