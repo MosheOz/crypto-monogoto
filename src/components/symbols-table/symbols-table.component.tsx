@@ -1,12 +1,6 @@
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-
-type GridCellDef = {
-  id: number;
-  symbol: string;
-  lastPrice: number;
-  openPrice: number;
-};
+import { GridCellDef } from "../../types/interfaces/symbol-table.interface";
 
 type symbolsTableType = {
   columns: GridColDef[];

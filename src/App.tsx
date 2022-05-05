@@ -1,12 +1,12 @@
 import React from "react";
 import Login from "./components/login/login.component";
-import SymbolsTable from "./components/symbols-table/symbols-table.component";
+import Home from "./components/home/home.component";
 
 function App() {
   return (
     <div>
       <Login />
-      <SymbolsTable />
+      <Home />
     </div>
   );
 }
