@@ -43,7 +43,8 @@ const SymbolModal: React.FC<symbolModalType> = ({ open, setOpen, symbol }) => {
           setSymbolData(result);
         },
         (error) => {
-          console.log("err", error);
+          alert(error);
+          console.error("err", error);
         }
       )
       .finally(() => {

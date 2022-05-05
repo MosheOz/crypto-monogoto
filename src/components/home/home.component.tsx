@@ -40,7 +40,8 @@ const Home = () => {
           setSymbolsList(result);
         },
         (error) => {
-          console.log("err", error);
+          alert(error);
+          console.error("err", error);
         }
       )
       .finally(() => {
