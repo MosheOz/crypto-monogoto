@@ -1,0 +1,118 @@
+[
+    {
+        "id": "8eb210a628700456",
+        "type": "tab",
+        "label": "get by passkey",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ac94b99e6ed7887b",
+        "type": "tab",
+        "label": "get all symbols",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "af9796b28a670665",
+        "type": "http in",
+        "z": "8eb210a628700456",
+        "name": "get-symbol-data/:symbol",
+        "url": "get-symbol-data/:symbol",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 160,
+        "wires": [
+            [
+                "983bf70936ae8a51"
+            ]
+        ]
+    },
+    {
+        "id": "983bf70936ae8a51",
+        "type": "http request",
+        "z": "8eb210a628700456",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api2.binance.com/api/v3/ticker/24hr?symbol={{{req.params.symbol}}}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 510,
+        "y": 160,
+        "wires": [
+            [
+                "d4e54c2fee7e0191"
+            ]
+        ]
+    },
+    {
+        "id": "d4e54c2fee7e0191",
+        "type": "http response",
+        "z": "8eb210a628700456",
+        "name": "res",
+        "statusCode": "",
+        "headers": {},
+        "x": 730,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "dd2cd1cc83ba52ec",
+        "type": "http in",
+        "z": "ac94b99e6ed7887b",
+        "name": "",
+        "url": "get-all",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 290,
+        "y": 180,
+        "wires": [
+            [
+                "f5cd1654e9615cf9"
+            ]
+        ]
+    },
+    {
+        "id": "f5cd1654e9615cf9",
+        "type": "http request",
+        "z": "ac94b99e6ed7887b",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api2.binance.com/api/v3/ticker/24hr",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 490,
+        "y": 180,
+        "wires": [
+            [
+                "d76fb823bea11c6e"
+            ]
+        ]
+    },
+    {
+        "id": "d76fb823bea11c6e",
+        "type": "http response",
+        "z": "ac94b99e6ed7887b",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 670,
+        "y": 180,
+        "wires": []
+    }
+]
