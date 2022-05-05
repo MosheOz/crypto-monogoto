@@ -20,8 +20,8 @@ export interface IRes {
   lowPrice: string;
   volume: string;
   quoteVolume: string;
-  openTime: number;
-  closeTime: number;
+  openTime: string;
+  closeTime: string;
   firstId: number;
   lastId: number;
   count: number;

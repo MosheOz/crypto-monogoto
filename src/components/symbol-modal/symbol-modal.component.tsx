@@ -38,6 +38,8 @@ const SymbolModal: React.FC<symbolModalType> = ({ open, setOpen, symbol }) => {
     fetchDynamicAPI(`${symbolURL}/${symbol}`)
       .then(
         (result: IRes) => {
+          result.openTime = new Date(result.openTime).toLocaleDateString();
+          result.closeTime = new Date(result.closeTime).toLocaleDateString();
           setSymbolData(result);
         },
         (error) => {
