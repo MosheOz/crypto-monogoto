@@ -6,7 +6,7 @@ export function analyzeRes(res: IErrorInterface | IRes): IAnalyzeRes {
     return { isError: true, msg: res.msg };
   }
   return {
-    isError: isPositiveChange(res),
+    isError: !isPositiveChange(res),
     msg: isPositiveChange(res) ? "" : "No positive change for this symbol",
   };
 }

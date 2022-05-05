@@ -7,6 +7,8 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { useNavigate } from "react-router-dom";
+
 import { analyzeRes } from "./login.helper";
 import { IErrorInterface, IRes } from "../../types/interfaces/res.interface";
 import { IAnalyzeRes } from "../../types/interfaces/analyze-res.interface";
@@ -18,6 +20,7 @@ const Login = () => {
     null
   );
   const [openSnack, setOpenSnack] = React.useState<boolean>(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (errorAnalizer) {
@@ -36,7 +39,12 @@ const Login = () => {
       .then((res) => res.json())
       .then(
         (result: IErrorInterface | IRes) => {
-          seterrorAnalizer(analyzeRes(result));
+          const { isError, msg } = analyzeRes(result);
+          if (!isError) {
+            navigate("/home", { replace: true });
+          } else {
+            seterrorAnalizer({ isError, msg });
+          }
         },
         (error) => {
           console.log("err", error);
