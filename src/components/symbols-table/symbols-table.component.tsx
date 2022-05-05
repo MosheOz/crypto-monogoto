@@ -9,13 +9,13 @@ type symbolsTableType = {
 
 const SymbolsTable: React.FC<symbolsTableType> = ({ columns, rows }) => {
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: 632, width: "100%" }}>
       <DataGrid
         onCellClick={(e) => console.log(e.row)}
         rows={rows}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
+        pageSize={10}
+        rowsPerPageOptions={[10]}
       />
     </div>
   );
